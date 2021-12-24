@@ -1,0 +1,162 @@
+<html>
+<head>
+  <title>Neko Checker</title>
+  <meta charset="utf-8">
+  <meta name="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="text/javascript" src="assets/script.js"></script>
+  <script src="https://kit.fontawesome.com/238ed829de.js" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+  <section class="hero is-small">
+    <div class="hero-body">
+      <p class="title is-4 white-text">Neko Checker</p>
+      <p class="subtitle is-5 gray-text">
+        Welcome to Neko Checker! Join with us on <a href="https://t.me/NEKO69R">@NEKO69R</a>
+      </p>
+    </div>
+  </section>
+  <br>
+  <div class="container is-fluid">
+    <div class="tile is-ancestor">
+      <div class="tile is-vertical is-parent">
+        <div class="tile is-child box">
+          <label class="label gray-text">Put Cards in Text Box</label>
+          <textarea class="textarea is-link is-focused gray-background" id="cards" rows="7"></textarea>
+          <br>
+          <div class="columns">
+            <div class="column is-half">
+              <button class="button is-success is-fullwidth is-focused" onclick="Start()" id="start_btn">Start</button>
+            </div>
+            <div class="column is-half">
+              <button class="button is-danger is-fullwidth is-focused" onclick="Stop()" id="stop_btn">Stop</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tile is-vertical is-parent">
+        <div class="tile is-child box">
+          <div class="block">
+            <label class="label gray-text">Your SK Key</label>
+            <input class="input is-link is-focused gray-background" type="text" id="sk"></input>
+          </div>
+          <div class="columns block">
+            <div class="column is-half">
+              <label class="label gray-text">Select Gate</label>
+              <div class="select is-fullwidth is-link is-focused">
+                <select id="gate" class="gray-selects">
+                  <option value="skbased.php">SK Based 1</option>
+                  <option value="skbased.php">SK Based 2</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-half">
+              <label class="label gray-text">Select Delay</label>
+              <div class="select is-fullwidth is-link is-focused">
+                <select id="timeout">
+                  <option value="1000">1 Second</option>
+                  <option value="2000">2 Seconds</option>
+                  <option value="3000">3 Seconds</option>
+                  <option value="5000">5 Seconds</option>
+                  <option value="10000">10 Seconds</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="columns block">
+            <div class="column is-half">
+              <label class="label gray-text">Select SK Type</label>
+              <div class="select is-fullwidth is-link is-focused">
+                <select id="sktype">
+                  <option value="select">Select</option>
+                  <option value="US">International SK</option>
+                  <option value="IN">Indian SK</option>
+                </select>
+              </div>
+            </div>
+            <div class="column is-half">
+              <label class="label gray-text" id="amount_text" style="display: none;">Select Amount</label>
+              <div class="select is-fullwidth is-link is-focused" id="IN_SK" style="display: none;">
+                <select mfid="select_IN">
+                  <option value="50_INR">0.5 INR</option>
+                  <option value="500_INR">5 INR</option>
+                  <option value="1000_INR">10 INR</option>
+                  <option value="5000_INR">50 INR</option>
+                  <option value="10000_INR">100 INR</option>
+                </select>
+              </div>
+              <div class="select is-fullwidth is-link is-focused" id="US_SK" style="display: none;">
+                <select mfid="select_US">
+                  <option value="50_USD">0.5 USD</option>
+                  <option value="100_USD">1 USD</option>
+                  <option value="200_USD">2 USD</option>
+                  <option value="500_USD">5 USD</option>
+                  <option value="1000_USD">10 USD</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="buttons has-addons is-centered">
+        <button class="button" id="cvv_btn" onclick="ShowHide('cvv_btn');">CVV: 0</button>
+        <button class="button" id="ccn_btn" onclick="ShowHide('ccn_btn');">CCN: 0</button>
+        <button class="button" id="dead_btn" onclick="ShowHide('dead_btn');">DEAD: 0</button>
+      </div>
+      <div>
+        <p class="white-text" id="cvv_text" style="display: none;"></p>
+        <p class="white-text" id="ccn_text" style="display: none;"></p>
+        <p class="white-text" id="dead_text" style="display: none;"></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  $("#sk").val("sk_live_QH9DwaBkLy7tSSSpSAK6C0rn00SmJ7FeCA");
+  var amount_text = $('#amount_text');
+  var sktype = $('#sktype');
+
+  function SetAmount(x) {
+    var select_in = $("[mfid='select_IN']");
+    var select_us = $("[mfid='select_US']");
+    if (x == "IN") {
+      select_in.attr("id", "amount");
+      select_us.removeAttr("id");
+    } else if (x == "US") {
+      select_us.attr("id", "amount");
+      select_in.removeAttr("id");
+    } else {
+      select_in.removeAttr("id");
+      select_us.removeAttr("id");
+    }
+  }
+
+  sktype.change(function() {
+    amount_text.css("display", "block");
+    var value = $(this).val();
+    var us_sk = $("#US_SK");
+    var in_sk = $("#IN_SK");
+    if (value == "US") {
+      in_sk.css("display", "none");
+      us_sk.css("display", "block");
+      SetAmount("US");
+    } else if (value == "IN") {
+      us_sk.css("display", "none");
+      in_sk.css("display", "block");
+      SetAmount("IN");
+    } else {
+      us_sk.css("display", "none");
+      in_sk.css("display", "none");
+      amount_text.css("display", "none");
+      SetAmount("");
+    }
+  });
+</script>
+
+</html>
